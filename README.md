@@ -1,0 +1,2 @@
+# valimail
+PHP Email validator
