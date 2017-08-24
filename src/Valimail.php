@@ -2,6 +2,7 @@
 
 namespace Valimail;
 
+use Valimail\ValidationMethod\RFC_Validation;
 use Valimail\ValidationMethod\SMTP_Validation;
 use Valimail\ValidationMethod\Syntax_Vlidation;
 
@@ -16,7 +17,7 @@ class Valimail
 
     public function validateAllMethod()
     {
-        $validation["validateSyntax"] = $this->validateSyntax();
+        $validation["validateRFCStandard"] = $this->validateRFCStandard();
         $validation["validateMXRecord"] = $this->validateMXRecord();
         $validation["validateSMTP"] = $this->validateSMTP();
 
@@ -31,9 +32,13 @@ class Valimail
         return array($status, $validation);
     }
 
-
+    public function validateRFCStandard(){
+        $rfc = new RFC_Validation();
+        return $rfc->validateRfcStandard($this->email);
+    }
     public function validateMXRecord()
     {
+
         list($name, $domain) = explode('@', $this->email);
 
         if (!checkdnsrr($domain, 'MX')) {
