@@ -33,14 +33,10 @@ class SMTP_Validation
         $result = false;
         list($name, $domain) = $this->explodeEmail($email);
 
-        $users = $name;
-
         /** retrieve SMTP Server by server domain */
         $mxs = $this->getMXRecord($domain);
         $mxs[$domain] = 100;
         $timeout = $max_conn_time / count($mxs);
-
-        print_r($mxs);
 
         /** Try to connect SMTP server */
 
@@ -73,14 +69,12 @@ class SMTP_Validation
             if ($code != '220') {
 
                 # MTA gave an error...
-
                 return $result;
 
             }
 
 
             # initiate smtp conversation
-
             $msg = "HELO " . $domain;
 
             fwrite($sock, $msg . "\r\n");
@@ -141,15 +135,9 @@ class SMTP_Validation
             #quit smtp connection
 
             $msg = "quit";
-
-
             fwrite($sock, $msg . "\r\n");
-
-
             # close socket
-
             fclose($sock);
-
 
         }
 
