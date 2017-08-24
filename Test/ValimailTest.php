@@ -7,12 +7,6 @@ use Valimail\Valimail;
 class ValimailTest extends TestCase
 {
 
-
-
-
-
-
-
     function testValidEmail()
     {
         /** Example Data */
@@ -22,15 +16,15 @@ class ValimailTest extends TestCase
             "nattapon_arty@hotmail.com"
         );
 
-        $countGoodEmail=0;
+        $countGoodEmail = 0;
         foreach ($validEmail as $email) {
             $validate = new  Valimail($email);
-            if($validate->validateMXRecord()){
+            if ($validate->validateMXRecord()) {
                 $countGoodEmail++;
             }
 
         }
-        $this->assertEquals($countGoodEmail,count($validEmail));
+        $this->assertEquals($countGoodEmail, count($validEmail));
     }
 
     function testInvalidEmail()
@@ -43,15 +37,29 @@ class ValimailTest extends TestCase
             "fuunggu@kaisong.xco"
         );
 
-        $countBedEmail=0;
+        $countBedEmail = 0;
         foreach ($invalidEmail as $email) {
             $validate = new  Valimail($email);
-            if(!$validate->validateMXRecord()){
+            if (!$validate->validateMXRecord()) {
                 $countBedEmail++;
             }
 
         }
-        $this->assertEquals($countBedEmail,count($invalidEmail));
+        $this->assertEquals($countBedEmail, count($invalidEmail));
     }
+
+    public function testSMTPEmail(){
+
+        /** Example Data */
+        $validEmail = array(
+            "nattapon.rakthong@gmail.com",
+            "nattapon@3dsinteractive.com",
+            "nattapon_arty@hotmail.com"
+        );
+        $validate = new  Valimail("nattapon.rakthong@gmail.com");
+
+       echo $validate->validateSMTP();
+    }
+
 
 }

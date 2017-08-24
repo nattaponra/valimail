@@ -2,6 +2,8 @@
 
 namespace Valimail;
 
+use Valimail\ValidationMethod\SMTP_Validation;
+
 class Valimail
 {
     public $email;
@@ -24,7 +26,8 @@ class Valimail
 
     public function validateSMTP()
     {
-      //  $this->email;
+        $smtp = new SMTP_Validation();
+        $smtp->SMTPValidate($this->email);
     }
 
 
