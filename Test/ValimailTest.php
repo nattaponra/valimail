@@ -7,59 +7,107 @@ use Valimail\Valimail;
 class ValimailTest extends TestCase
 {
 
-    function testValidEmail()
+    private $validEmail;
+    private $invalidEmail;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
-        /** Example Data */
-        $validEmail = array(
+
+        parent::__construct($name, $data, $dataName);
+
+        $this->validEmail = array(
             "nattapon.rakthong@gmail.com",
             "nattapon@3dsinteractive.com",
             "nattapon_arty@hotmail.com"
         );
 
+        $this->invalidEmail = array(
+            "xxx@gmail.com",
+            "asdasdas@ffffasdad.com",
+            "fungger@reasdq1sdasdas11.com",
+            "fuunggu@kaisong.xco"
+        );
+    }
+
+    //testTrackPageView_givenAnonymouseIsTrue_expectSeeLeadInDatabase
+    function testVidateMXrecord_giveInputIsValidEmailArray_expectEmailsAreGood()
+    {
+
         $countGoodEmail = 0;
-        foreach ($validEmail as $email) {
+        foreach ($this->validEmail as $email) {
             $validate = new  Valimail($email);
             if ($validate->validateMXRecord()) {
                 $countGoodEmail++;
             }
 
         }
-        $this->assertEquals($countGoodEmail, count($validEmail));
+        $this->assertEquals($countGoodEmail, count($this->validEmail));
     }
 
-    function testInvalidEmail()
+    function testVidateMXrecord_giveInputIsInvalidEmailArray_expectAllEmailsAreBad()
     {
-        /** Example Data */
-        $invalidEmail = array(
-            "xxx@com",
-            "asdasdas@ffffasdad.com",
-            "fungger@reasdq1sdasdas11.com",
-            "fuunggu@kaisong.xco"
-        );
 
-        $countBedEmail = 0;
-        foreach ($invalidEmail as $email) {
+
+        $countBadEmail = 0;
+        foreach ($this->invalidEmail as $email) {
             $validate = new  Valimail($email);
             if (!$validate->validateMXRecord()) {
-                $countBedEmail++;
+                $countBadEmail++;
             }
 
         }
-        $this->assertEquals($countBedEmail, count($invalidEmail));
+        $this->assertEquals($countBadEmail, count($this->invalidEmail));
     }
 
-    public function testSMTPEmail(){
+//    public function testVidateSMTP_giveInputIsValidEmailArray_expectAllEmailsFoundSMTPServer()
+//    {
+//        $countFoundSMTPServer = 0;
+//        foreach ($this->validEmail as $email) {
+//            $validate = new  Valimail($email);
+//
+//            if (!$validate->validateSMTP()) {
+//                $countFoundSMTPServer++;
+//            }
+//
+//        }
+//        $this->assertEquals($countFoundSMTPServer, count($this->validEmail));
+//
+//    }
 
-        /** Example Data */
-        $validEmail = array(
-            "nattapon.rakthong@gmail.com",
-            "nattapon@3dsinteractive.com",
-            "nattapon_arty@hotmail.com"
-        );
-        $validate = new  Valimail("nattapon.rakthong@gmail.com");
 
-       echo $validate->validateSMTP();
+    public function testVidateEmailSyntax_giveInputIsValidEmailArray_expectAllCorrectEmailSyntax()
+    {
+        $countCorrectSyntax = 0;
+        foreach ($this->validEmail as $email) {
+            $validate = new  Valimail($email);
+
+            if ($validate->validateSyntax()) {
+                $countCorrectSyntax++;
+            }
+
+        }
+
+        $this->assertEquals($countCorrectSyntax, count($this->validEmail));
+
+
     }
 
+
+    public function testAllMethodValidate_giveInputIsInvalidEmailArray_expectAllEmailsAreBadEmail()
+    {
+
+        $countBadEmail = 0;
+        foreach ($this->invalidEmail as $email) {
+            $validate = new  Valimail($email);
+            list($status, $result) = $validate->validateAllMethod();
+            if (!$status) {
+                $countBadEmail++;
+            }
+
+        }
+
+        $this->assertEquals($countBadEmail, count($this->invalidEmail));
+
+    }
 
 }

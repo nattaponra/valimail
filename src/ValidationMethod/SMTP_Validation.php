@@ -35,6 +35,9 @@ class SMTP_Validation
 
         /** retrieve SMTP Server by server domain */
         $mxs = $this->getMXRecord($domain);
+        if (count($mxs) == 0) {
+            return false;
+        }
         $mxs[$domain] = 100;
         $timeout = $max_conn_time / count($mxs);
 
@@ -49,10 +52,7 @@ class SMTP_Validation
                 stream_set_timeout($sock, $max_read_time);
 
                 break;
-
             }
-
-
         }
 
         # did we get a TCP socket
@@ -72,7 +72,6 @@ class SMTP_Validation
                 return $result;
 
             }
-
 
             # initiate smtp conversation
             $msg = "HELO " . $domain;
