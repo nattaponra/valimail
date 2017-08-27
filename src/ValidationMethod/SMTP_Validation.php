@@ -37,7 +37,7 @@ class SMTP_Validation
             "554" => "Transaction failed"
         );
 
-        return $code.":".isset($description[$code]) ? $description[$code] : "";
+        return $code . ":" . isset($description[$code]) ? $description[$code] : "";
     }
 
 
@@ -142,6 +142,8 @@ class SMTP_Validation
             if ($code == '250' || $code == '451' || $code == '452') {
 
                 return array("status" => true, "messages" => $this->getDescriptionStatusCode($code));
+            } else {
+                return array("status" => false, "messages" => $this->getDescriptionStatusCode($code));
             }
 
 
