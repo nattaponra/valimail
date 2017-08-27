@@ -37,7 +37,7 @@ class SMTP_Validation
             "554" => "Transaction failed"
         );
 
-        return isset($description[$code]) ? $description[$code] : "";
+        return $code.":".isset($description[$code]) ? $description[$code] : "";
     }
 
 
@@ -68,18 +68,20 @@ class SMTP_Validation
 
     public function SMTPValidate($email)
     {
+
         $max_conn_time = 30;
         $sock = '';
         $port = 25;
         $max_read_time = 5;
-        $messages = "";
+
         $result = false;
         list($name, $domain) = $this->explodeEmail($email);
 
         /** retrieve SMTP Server by server domain */
         $mxs = $this->getMXRecord($domain);
         if (count($mxs) == 0) {
-            return false;
+            return array("status" => false, "messages" => "SMTP server not found.");
+
         }
         $mxs[$domain] = 100;
         $timeout = $max_conn_time / count($mxs);
@@ -89,7 +91,6 @@ class SMTP_Validation
         while (list($host) = each($mxs)) {
 
             #connect to SMTP server
-
             if ($sock = @fsockopen($host, $port, $errno, $errstr, (float)$timeout)) {
 
                 stream_set_timeout($sock, $max_read_time);
@@ -99,7 +100,6 @@ class SMTP_Validation
         }
 
         # did we get a TCP socket
-
         if ($sock) {
 
             $reply = fread($sock, 2082);
@@ -132,7 +132,6 @@ class SMTP_Validation
             $code = $this->getResponseCode($reply);
 
 
-
             /** quit smtp connection */
             $msg = "QUIT";
             fwrite($sock, $msg . "\r\n");
@@ -148,7 +147,7 @@ class SMTP_Validation
 
         }
 
-        return array("status" => false, "messages" => "Can't connect SMTP server.");;
+        return array("status" => false, "messages" => "Can't connect SMTP server.");
 
     }
 
