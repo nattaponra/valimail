@@ -17,13 +17,18 @@ class Valimail
 
     public function validateAllMethod()
     {
-        $validation["validateRFCStandard"] = $this->validateRFCStandard();
-        $validation["validateMXRecord"] = $this->validateMXRecord();
+        if ($this->validateRFCStandard()) {
+            $validation["validateRFCStandard"] = array("status" => true, "messages" => 'Success');
+        } else {
+            $validation["validateRFCStandard"] = array("status" => false, "messages" => 'InvalidRFCStandard');
+        }
+
+
         $validation["validateSMTP"] = $this->validateSMTP();
 
         $countTrue = 0;
         foreach ($validation as $method) {
-            if ($method) {
+            if ($method["status"]) {
                 $countTrue++;
             }
         }
@@ -32,10 +37,12 @@ class Valimail
         return array($status, $validation);
     }
 
-    public function validateRFCStandard(){
+    public function validateRFCStandard()
+    {
         $rfc = new RFC_Validation();
         return $rfc->validateRfcStandard($this->email);
     }
+
     public function validateMXRecord()
     {
 
