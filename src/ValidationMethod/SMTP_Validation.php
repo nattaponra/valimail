@@ -37,7 +37,10 @@ class SMTP_Validation
             "554" => "Transaction failed"
         );
 
-        return $code . ":" . isset($description[$code]) ? $description[$code] : "";
+        if (array_key_exists($code, $description)) {
+            return $code . ":" . $description[$code];
+        }
+        return $code . ":[]";
     }
 
 
