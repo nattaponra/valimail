@@ -112,7 +112,7 @@ class SMTP_Validation
 
 
             /** initiate smtp conversation */
-            $msg = "HELO " . $domain;
+            $msg = "EHLO " . $domain;
             fwrite($sock, $msg . "\r\n");
             $reply = fread($sock, 2082);
             if ($code = $this->getResponseCode($reply) != '250') {
